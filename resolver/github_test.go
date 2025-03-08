@@ -2,24 +2,28 @@ package resolver_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/google/go-github/v28/github"
 	"github.com/tj/assert"
-	"github.com/tj/go/env"
 	"golang.org/x/oauth2"
 
-	"github.com/tj/gobinaries"
-	"github.com/tj/gobinaries/resolver"
+	"github.com/matsilva/goinstall"
+	"github.com/matsilva/goinstall/resolver"
 )
 
 // newResolver returns a new GitHub resolver.
-func newResolver() gobinaries.Resolver {
-	ctx := context.Background()
+func newResolver(t testing.TB) goinstall.Resolver {
+	token := os.Getenv("GITHUB_TOKEN")
+	if token == "" {
+		t.Skip("GITHUB_TOKEN environment variable is required")
+	}
 
+	ctx := context.Background()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{
-			AccessToken: env.Get("GITHUB_TOKEN"),
+			AccessToken: token,
 		},
 	)
 
@@ -30,7 +34,7 @@ func newResolver() gobinaries.Resolver {
 
 // Test resolver.
 func TestGitHub_Resolve(t *testing.T) {
-	r := newResolver()
+	r := newResolver(t)
 
 	t.Run("exact match", func(t *testing.T) {
 		v, err := r.Resolve("tj", "d3-bar", "v1.8.0")

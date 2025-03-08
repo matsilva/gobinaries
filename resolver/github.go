@@ -8,7 +8,7 @@ import (
 	"github.com/google/go-github/v28/github"
 	"github.com/tj/go-semver"
 
-	"github.com/tj/gobinaries"
+	"github.com/matsilva/goinstall"
 )
 
 // GitHub is an implementation of Versioner for
@@ -36,7 +36,7 @@ func (g *GitHub) Resolve(owner, repo, version string) (string, error) {
 
 	// no versions, it has tags but they're not semver
 	if len(versions) == 0 {
-		return "", gobinaries.ErrNoVersions
+		return "", goinstall.ErrNoVersions
 	}
 
 	// master special-case
@@ -56,7 +56,7 @@ func (g *GitHub) Resolve(owner, repo, version string) (string, error) {
 		}
 	}
 
-	return "", gobinaries.ErrNoVersionMatch
+	return "", goinstall.ErrNoVersionMatch
 }
 
 // versions returns the versions of a repository.
@@ -89,7 +89,7 @@ func (g *GitHub) versions(owner, repo string) (versions []string, err error) {
 	}
 
 	if len(versions) == 0 {
-		return nil, gobinaries.ErrNoVersions
+		return nil, goinstall.ErrNoVersions
 	}
 
 	return

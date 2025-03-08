@@ -1,4 +1,48 @@
+# Existing entries
 static/*
+.DS_Store
 .envrc
 up.json
 Makefile
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go workspace file
+go.work
+
+# Dependency directories
+vendor/
+
+# Build output directories
+bin/
+dist/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment files
+.env
+*.env.local
+
+# Debug files
+debug/
+
+# System files
+Thumbs.db
+
+# Log files
+*.log

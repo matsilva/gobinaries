@@ -1,6 +1,6 @@
-# Go Binaries
+# Go Install
 
-[Go Binaries](https://gobinaries.com/) is an on-demand binary server, allowing non-Go users to quickly install tools written in Go without installing `go` itself, and removing the burden of cross-compiling and uploading dozens of binaries for every command-line you write.
+[Go Install](https://goinstall.app/) is an on-demand binary server, allowing non-Go users to quickly install tools written in Go without installing `go` itself, and removing the burden of cross-compiling and uploading dozens of binaries for every command-line you write.
 
 ![On-demand Go binary example](assets/example.png)
 
@@ -11,13 +11,13 @@
 Install `PKG` with optional semver `VERSION`.
 
 ```
-curl -sf https://gobinaries.com/<PKG>[@VERSION] | sh
+curl -sf https://goinstall.app/<PKG>[@VERSION] | sh
 ```
 
 Install `PKG` with optional semver `VERSION` to the given directory `PREFIX`. By default `/usr/local/bin` is used.
 
 ```
-curl -sf https://gobinaries.com/<PKG>[@VERSION] | PREFIX=/tmp sh
+curl -sf https://goinstall.app/<PKG>[@VERSION] | PREFIX=/tmp sh
 ```
 
 The `github.com` path prefix is optional.
@@ -27,31 +27,31 @@ The `github.com` path prefix is optional.
 Install the `hey` HTTP benchmarking tool:
 
 ```sh
-curl -sf https://gobinaries.com/rakyll/hey | sh
+curl -sf https://goinstall.app/rakyll/hey | sh
 ```
 
 Install the `wuzz` HTTP client:
 
 ```sh
-curl -sf https://gobinaries.com/asciimoo/wuzz | sh
+curl -sf https://goinstall.app/asciimoo/wuzz | sh
 ```
 
 Install the latest version of `staticgen`:
 
 ```
-curl -sf https://gobinaries.com/tj/staticgen/cmd/staticgen | sh
+curl -sf https://goinstall.app/tj/staticgen/cmd/staticgen | sh
 ```
 
 Install the latest `1.x` major version of `staticgen`:
 
 ```
-curl -sf https://gobinaries.com/tj/staticgen/cmd/staticgen@1.x | sh
+curl -sf https://goinstall.app/tj/staticgen/cmd/staticgen@1.x | sh
 ```
 
 Install the `v1.0.0` version of `triage`:
 
 ```
-curl -sf https://gobinaries.com/tj/triage/cmd/triage@1.0.0 | sh
+curl -sf https://goinstall.app/tj/triage/cmd/triage@1.0.0 | sh
 ```
 
 ## Semver support
@@ -65,17 +65,17 @@ The following semver patterns are supported:
 
 ## How does it work?
 
-Take for example you want to install @rakyll's fantastic HTTP benchmarking tool [hey](https://gobinaries.com/rakyll/hey), to install the latest release you would run:
+Take for example you want to install @rakyll's fantastic HTTP benchmarking tool [hey](https://goinstall.app/rakyll/hey), to install the latest release you would run:
 
 ```sh
-curl -sf https://gobinaries.com/rakyll/hey | sh
+curl -sf https://goinstall.app/rakyll/hey | sh
 ```
 
 This request fetches the latest tag from GitHub and responds with a shell script
 which performs a second request, populated with the resolved version and architecture as shown here:
 
 ```
-https://gobinaries.com/binary/github.com/rakyll/hey?os=darwin&arch=amd64&version=v0.1.3
+https://goinstall.app/binary/github.com/rakyll/hey?os=darwin&arch=amd64&version=v0.1.3
 ```
 
 The response of this request is a Golang binary compiled for the requested os, architecture, and package version. The result is cached in a CDN for subsequent requests.
@@ -94,7 +94,7 @@ The response of this request is a Golang binary compiled for the requested os, a
 
 <details>
   <summary>Which version of Go is used?</summary>
-  Currently Go 1.21.x via the official golang:1.21-alpine Docker image.
+  Currently Go 1.13.x via the official golang:1.13 Docker image.
 </details>
 
 ---

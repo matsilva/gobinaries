@@ -7,25 +7,26 @@ import (
 	"strings"
 	"testing"
 
-	googlestorage "cloud.google.com/go/storage"
 	"github.com/tj/assert"
 
-	"github.com/tj/gobinaries"
-	"github.com/tj/gobinaries/storage"
+	"github.com/matsilva/goinstall"
+	"github.com/matsilva/goinstall/storage"
 )
 
 // newStorage helper.
-func newStorage(t testing.TB) gobinaries.Storage {
+func newStorage(t testing.TB) goinstall.Storage {
 	skipWithoutGoogleCredentials(t)
 
-	client, err := googlestorage.NewClient(context.Background())
-	assert.NoError(t, err)
-
-	return &storage.Google{
-		Client: client,
-		Bucket: "gobinaries",
-		Prefix: "testing",
+	ctx := context.Background()
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		t.Fatalf("error creating storage client: %s", err)
 	}
+
+	return storage.NewGoogle(&storage.GoogleOptions{
+		Client: client,
+		Bucket: "goinstall",
+	})
 }
 
 // Test object creation.
@@ -33,7 +34,7 @@ func TestGoogle_Create(t *testing.T) {
 	s := newStorage(t)
 	ctx := context.Background()
 
-	bin := gobinaries.Binary{
+	bin := goinstall.Binary{
 		Path:    "github.com/tj/node-prune",
 		Version: "v1.0.0",
 		OS:      "darwin",
@@ -50,7 +51,7 @@ func TestGoogle_Get(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("exists", func(t *testing.T) {
-		bin := gobinaries.Binary{
+		bin := goinstall.Binary{
 			Path:    "github.com/tj/node-prune",
 			Version: "v1.0.0",
 			OS:      "darwin",
@@ -67,7 +68,7 @@ func TestGoogle_Get(t *testing.T) {
 	})
 
 	t.Run("missing", func(t *testing.T) {
-		bin := gobinaries.Binary{
+		bin := goinstall.Binary{
 			Path:    "github.com/tj/node-prune",
 			Version: "v2.1.0",
 			OS:      "darwin",
@@ -75,7 +76,7 @@ func TestGoogle_Get(t *testing.T) {
 		}
 
 		_, err := s.Get(ctx, bin)
-		assert.Equal(t, gobinaries.ErrObjectNotFound, err)
+		assert.Equal(t, goinstall.ErrObjectNotFound, err)
 	})
 }
 

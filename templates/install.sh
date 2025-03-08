@@ -180,7 +180,7 @@ start() {
     install "$tmp" "$prefix"
   else
     log_info "Permissions required for installation to $prefix — alternatively specify a new directory with:"
-    log_info "  $ curl -sf https://gobinaries.com/$pkg@$version | PREFIX=. sh"
+    log_info "  $ curl -sf https://goinstall.app/$pkg@$version | PREFIX=. sh"
     sudo install "$tmp" "$prefix"
   fi
 

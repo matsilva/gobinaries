@@ -1,5 +1,5 @@
-// Package gobinaries provides an HTTP server for on-demand Go binaries.
-package gobinaries
+// Package goinstall provides an HTTP server for on-demand Go binaries.
+package goinstall
 
 import (
 	"context"
