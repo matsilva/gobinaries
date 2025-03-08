@@ -4,17 +4,19 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.13.x]
+        go-version: [1.21.x]
         platform: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Install Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
       - name: Test
-        run: go test ./...
+        run: |
+          go mod download
+          go test -v ./...
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

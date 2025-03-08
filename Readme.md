@@ -4,6 +4,8 @@
 
 ![On-demand Go binary example](assets/example.png)
 
+> Note: This is a fork of the original [tj/gobinaries](https://github.com/tj/gobinaries) project.
+
 ## Usage
 
 Install `PKG` with optional semver `VERSION`.
@@ -18,7 +20,7 @@ Install `PKG` with optional semver `VERSION` to the given directory `PREFIX`. By
 curl -sf https://gobinaries.com/<PKG>[@VERSION] | PREFIX=/tmp sh
 ```
 
-The `github.com` path prefix is optional. 
+The `github.com` path prefix is optional.
 
 ## Examples
 
@@ -78,7 +80,6 @@ https://gobinaries.com/binary/github.com/rakyll/hey?os=darwin&arch=amd64&version
 
 The response of this request is a Golang binary compiled for the requested os, architecture, and package version. The result is cached in a CDN for subsequent requests.
 
-
 ## Limitations
 
 - The Go package must compile in under 100 seconds (CDN limitation)
@@ -93,21 +94,19 @@ The response of this request is a Golang binary compiled for the requested os, a
 
 <details>
   <summary>Which version of Go is used?</summary>
-  Currently Go 1.13.x via the official golang:1.13 Docker image.
+  Currently Go 1.21.x via the official golang:1.21-alpine Docker image.
 </details>
 
 ---
 
-[![GoDoc](https://godoc.org/github.com/tj/bins?status.svg)](https://godoc.org/github.com/tj/bins)
+[![GoDoc](https://godoc.org/github.com/matsilva/gobinaries?status.svg)](https://godoc.org/github.com/matsilva/gobinaries)
 ![](https://img.shields.io/badge/license-MIT-blue.svg)
-![](https://img.shields.io/badge/status-stable-green.svg)
-![](https://github.com/tj/gobinaries.com/workflows/Tests/badge.svg)
+![](https://img.shields.io/badge/status-maintained-green.svg)
+![](https://github.com/matsilva/gobinaries/workflows/Tests/badge.svg)
 
 ## Sponsors
 
-## Sponsors
-
-This project is sponsored by [CTO.ai](https://cto.ai/), making it easy for development teams to create and share workflow automations without leaving the command line.
+This project was originally sponsored by [CTO.ai](https://cto.ai/).
 
 [![](https://apex-software.imgix.net/github/sponsors/cto.png)](https://cto.ai/)
 
@@ -182,4 +181,3 @@ And my [GitHub sponsors](https://github.com/sponsors/tj):
 [<img src="https://sponsors-api-u2fftug6kq-uc.a.run.app/sponsor/avatar/66" width="35">](https://sponsors-api-u2fftug6kq-uc.a.run.app/sponsor/profile/66)
 [<img src="https://sponsors-api-u2fftug6kq-uc.a.run.app/sponsor/avatar/67" width="35">](https://sponsors-api-u2fftug6kq-uc.a.run.app/sponsor/profile/67)
 [<img src="https://sponsors-api-u2fftug6kq-uc.a.run.app/sponsor/avatar/68" width="35">](https://sponsors-api-u2fftug6kq-uc.a.run.app/sponsor/profile/68)
-
