@@ -18,8 +18,8 @@ import (
 	"github.com/tj/go/http/request"
 	"github.com/tj/go/http/response"
 
-	"github.com/tj/gobinaries"
-	"github.com/tj/gobinaries/build"
+	"github.com/matsilva/goinstall"
+	"github.com/matsilva/goinstall/build"
 )
 
 // Server is the binary server.
@@ -31,10 +31,10 @@ type Server struct {
 	Static string
 
 	// Store is the object storage.
-	Storage gobinaries.Storage
+	Storage goinstall.Storage
 
 	// Resolver is the version resolver.
-	Resolver gobinaries.Resolver
+	Resolver goinstall.Resolver
 
 	once      sync.Once
 	templates *template.Template
@@ -126,13 +126,13 @@ func (s *Server) getScript(w http.ResponseWriter, r *http.Request) {
 	logs.Info("resolving version")
 	resolved, err := s.Resolver.Resolve(owner, repo, version)
 
-	if err == gobinaries.ErrNoVersions {
+	if err == goinstall.ErrNoVersions {
 		logs.Warn("no tags")
 		s.render(w, "error.sh", "Repository has no tags")
 		return
 	}
 
-	if err == gobinaries.ErrNoVersionMatch {
+	if err == goinstall.ErrNoVersionMatch {
 		logs.Warn("no match")
 		s.render(w, "error.sh", "Repository has no tags matching the requested version")
 		return
@@ -181,7 +181,6 @@ func (s *Server) getScript(w http.ResponseWriter, r *http.Request) {
 // - version
 //
 // For example "github.com/tj/triage/cmd/triage?os=linux&arch=amd64&version=1.0.0".
-//
 func (s *Server) getBinary(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	pkg := strings.TrimPrefix(r.URL.Path, "/")
@@ -219,7 +218,7 @@ func (s *Server) getBinary(w http.ResponseWriter, r *http.Request) {
 		"version": version,
 	})
 
-	bin := gobinaries.Binary{
+	bin := goinstall.Binary{
 		Path:    pkg,
 		Module:  mod,
 		Version: version,
@@ -249,44 +248,36 @@ func (s *Server) getBinary(w http.ResponseWriter, r *http.Request) {
 		response.InternalServerError(w)
 		return
 	}
-	logs.WithField("duration", duration(start)).Info("built package")
 
-	// store the binary
-	start = time.Now()
-	ctx, cancel = context.WithTimeout(context.Background(), time.Second*15)
-	defer cancel()
-	logs.Info("storing package")
-	err = s.Storage.Create(ctx, &buf, bin)
-	if err == nil {
-		logs.WithField("duration", duration(start)).Info("stored package")
-	} else {
-		logs.WithError(err).Error("storing binary")
-	}
+	// store the binary in the background
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
+		defer cancel()
 
-	// clear module cache
-	start = time.Now()
-	err = build.ClearCache()
-	if err == nil {
-		logs.WithField("duration", duration(start)).Info("cleared cache")
-	} else {
-		logs.WithError(err).Error("clearing cache")
-	}
+		err := s.Storage.Create(ctx, bytes.NewReader(buf.Bytes()), bin)
+		if err != nil {
+			logs.WithError(err).Error("storing")
+			return
+		}
+
+		logs.WithField("duration", duration(start)).Info("stored binary")
+	}()
+
+	logs.WithField("duration", duration(start)).Info("built binary")
 }
 
-// render template.
+// render template by name.
 func (s *Server) render(w http.ResponseWriter, name string, data interface{}) {
-	w.Header().Set("Content-Type", "application/x-sh")
-	w.Header().Set("Cache-Control", "no-store")
-	s.templates.ExecuteTemplate(w, name, data)
+	w.Header().Set("Content-Type", "text/plain")
+	_ = s.templates.ExecuteTemplate(w, name, data)
 }
 
-// immutable sets immutability header fields.
+// immutable response.
 func immutable(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Cache-Control", "max-age=31536000, immutable")
 }
 
-// duration returns the duration since start in milliseconds.
+// duration in ms.
 func duration(start time.Time) int {
 	return int(time.Since(start) / time.Millisecond)
 }

@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/tj/gobinaries"
+	"github.com/matsilva/goinstall"
 )
 
 // environMap returns a map of environment variables.
@@ -52,7 +52,7 @@ func (e Error) Error() string {
 }
 
 // Write a package binary to w.
-func Write(w io.Writer, bin gobinaries.Binary) error {
+func Write(w io.Writer, bin goinstall.Binary) error {
 	dir, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("user home dir: %w", err)
@@ -137,7 +137,7 @@ func isExecutable(mode os.FileMode) bool {
 // necessary to build using Go modules since `go build` does not support
 // semver, awkward UX but oh well.
 func addModule(dir string) error {
-	cmd := exec.Command("go", "mod", "init", "github.com/gobinary")
+	cmd := exec.Command("go", "mod", "init", "github.com/goinstall")
 	cmd.Env = environ()
 	cmd.Env = append(cmd.Env, "GO111MODULE=on")
 	cmd.Dir = dir
@@ -154,7 +154,7 @@ func getMajorVersion(tag string) (int, error) {
 }
 
 // normalizeModuleDep returns a normalized module dependency.
-func normalizeModuleDep(bin gobinaries.Binary) string {
+func normalizeModuleDep(bin goinstall.Binary) string {
 	mod := bin.Module
 	version := bin.Version
 	var dep string
@@ -177,7 +177,7 @@ func addModuleDep(dir, dep string) error {
 }
 
 // buildBinary performs a `go build` and outputs the binary to dst.
-func buildBinary(dir, dst string, bin gobinaries.Binary) error {
+func buildBinary(dir, dst string, bin goinstall.Binary) error {
 	ldflags := fmt.Sprintf("-X main.version=%s", bin.Version)
 	cmd := exec.Command("go", "build", "-o", dst, "-ldflags", ldflags, bin.Path)
 	cmd.Env = environ()
@@ -205,7 +205,7 @@ func command(cmd *exec.Cmd) error {
 
 // tempFilename returns a new temporary file name.
 func tempFilename() (string, error) {
-	f, err := ioutil.TempFile(os.TempDir(), "gobinary")
+	f, err := ioutil.TempFile(os.TempDir(), "goinstall")
 	if err != nil {
 		return "", err
 	}

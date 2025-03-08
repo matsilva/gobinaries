@@ -10,7 +10,6 @@ require (
 	github.com/tj/assert v0.0.3
 	github.com/tj/go v1.8.6
 	github.com/tj/go-semver v1.0.0
-	github.com/tj/gobinaries v1.2.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 )
 

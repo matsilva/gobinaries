@@ -87,10 +87,10 @@ The response of this request is a Golang binary compiled for the requested os, a
 
 ---
 
-[![GoDoc](https://godoc.org/github.com/matsilva/gobinaries?status.svg)](https://godoc.org/github.com/matsilva/gobinaries)
+[![GoDoc](https://godoc.org/github.com/matsilva/goinstall?status.svg)](https://godoc.org/github.com/matsilva/goinstall)
 ![](https://img.shields.io/badge/license-MIT-blue.svg)
 ![](https://img.shields.io/badge/status-maintained-green.svg)
-![](https://github.com/matsilva/gobinaries/workflows/Tests/badge.svg)
+![](https://github.com/matsilva/goinstall/workflows/Tests/badge.svg)
 
 ## Sponsors
 
